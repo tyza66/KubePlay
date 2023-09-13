@@ -1,0 +1,421 @@
+kubeadm init \
+	--apiserver-advertise-address=192.168.52.129 \
+	--image-repository registry.aliyuncs.com/google_containers \
+	--kubernetes-version=v1.23.6 \
+	--service-cidr=10.96.0.0/12 \
+	--pod-network-cidr=10.244.0.0/16 \
+	--ignore-preflight-errors=all
+
+
+
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+openssl dgst -sha256 -hex | sed 's/^.* //'
+
+kubeadm join 192.168.52.129:6443 --token ev42i4.kg7zdl4tkpsws1iq \
+    --discovery-token-ca-cert-hash sha256:1f141121a04b72c976f6dc510fd6f47b96e6d814ee2fcb41cc9ec21f1fd7b47f 
+
+192.168.52.129 master
+
+
+ 1  set +o history;
+    2  sudo yum-config-manager --add-repo  http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo;
+    3  mkdir -p /etc/docker/;
+    4  yum install docker-ce docker-ce-cli -y;
+    5  yum --enablerepo=docker-ce-stable clean metadataA
+    6  sudo yum install -y yum-utils
+    7  sudo yum-config-manager     --add-repo     https://download.docker.com/linux/centos/docker-ce.repo
+    8  sudo mkdir -p /etc/docker
+    9  sudo tee /etc/docker/daemon.json <<-'EOF'
+   10  {
+   11    "registry-mirrors": ["https://xxx.mirror.aliyuncs.com"]
+   12  }
+   13  EOF
+   14  sudo systemctl daemon-reload
+   15  sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+   16  docker 
+   17   sudo yum install docker-compose-plugin
+   18  yum install -y kubelet-1.23.6 kubeadm-1.23.6 kubectl-1.23.6
+   19  sudo yum-config-manager --add-repo  http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo;
+   20  yum install -y kubelet-1.23.6 kubeadm-1.23.6 kubectl-1.23.6
+   21  cat > /etc/yum.repos.d/kubernetes.repo << EOF
+   22  [kubernetes]
+   23  name=Kubernetes
+   24  baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+   25  enabled=1
+   26  gpgcheck=0
+   27  repo_gpgcheck=0
+   28  gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+   29  EOF
+   30  ————————————————
+   31  版权声明：本文为CSDN博主「大新新大浩浩」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+   32  yum install -y kubelet-1.23.6 kubeadm-1.23.6 kubectl-1.23.6
+   33  systemctl enable kubelet.service
+   34  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   35  sudo swapoff -a
+   36  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   37  sudo yum install docker-compose-plugin
+   38  sudo systemctl daemon-reload
+   39  sudo systemctl restart docker
+   40  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   41  kubeadm reset
+   42  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   43  vim etc/hosts
+   44  vim etc/host
+   45  vim /etc/host
+   46  vim /etc/hosts
+   47  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   48  nslookup 192.168.0.118
+   49  nslookup 192.168.52.129
+   50  vim /etc/hosts
+   51  nslookup 192.168.0.118
+   52  nslookup 192.168.52.129
+   53  vim /etc/hosts
+   54  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   55  hostnamectl set-hostname myname
+   56  hostnamectl set-hostname master
+   57  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   58  journalctl -xefu kubelet
+   59  vim /etc/docker/daemon.json
+   60  systemctl daemon-reload
+   61  systemctl restart docker
+   62  systemctl restart kubelet
+   63  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   64   mkdir -p $HOME/.kube
+   65    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   66    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   67  systemctl disable firewalld
+   68  chkconfig iptables off
+   69  kubectl node list
+   70  kubectl
+   71  kubectl get nodes
+   72  set +o history;
+   73  history
+
+
+swapoff -a
+
+ mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+kubeadm join 192.168.52.129:6443 --token twkopm.dq1jwt7ks1ne1yls \
+        --discovery-token-ca-cert-hash sha256:bf43aca6e944fee3e9fe4ddf9a5581c8f8e70c508e69dbc593256356a4bd6ea4 
+
+
+kubeadm join 192.168.52.129:6443 --token sv6cid.zq0k6u82rdszwixn \
+        --discovery-token-ca-cert-hash sha256:bf43aca6e944fee3e9fe4ddf9a5581c8f8e70c508e69dbc593256356a4bd6ea4 
+
+wget https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+
+
+ sed -i 's#docker.io/##g' calico.yaml
+
+
+sed -i 's/"autodetect"/"autodetect"\n            - name: IP_AUTODETECTION_METHOD\n             value: "interface=ens33"/g' calico.yaml
+
+
+https://www.cnblogs.com/Pigs-Will-Fly/p/17592712.html
+
+
+
+1  set +o history;
+    2  sudo yum-config-manager --add-repo  http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo;
+    3  mkdir -p /etc/docker/;
+    4  yum install docker-ce docker-ce-cli -y;
+    5  yum --enablerepo=docker-ce-stable clean metadataA
+    6  sudo yum install -y yum-utils
+    7  sudo yum-config-manager     --add-repo     https://download.docker.com/linux/centos/docker-ce.repo
+    8  sudo mkdir -p /etc/docker
+    9  sudo tee /etc/docker/daemon.json <<-'EOF'
+   10  {
+   11    "registry-mirrors": ["https://xxx.mirror.aliyuncs.com"]
+   12  }
+   13  EOF
+   14  sudo systemctl daemon-reload
+   15  sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+   16  docker 
+   17   sudo yum install docker-compose-plugin
+   18  yum install -y kubelet-1.23.6 kubeadm-1.23.6 kubectl-1.23.6
+   19  sudo yum-config-manager --add-repo  http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo;
+   20  yum install -y kubelet-1.23.6 kubeadm-1.23.6 kubectl-1.23.6
+   21  cat > /etc/yum.repos.d/kubernetes.repo << EOF
+   22  [kubernetes]
+   23  name=Kubernetes
+   24  baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+   25  enabled=1
+   26  gpgcheck=0
+   27  repo_gpgcheck=0
+   28  gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+   29  EOF
+   30  ————————————————
+   31  版权声明：本文为CSDN博主「大新新大浩浩」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+   32  yum install -y kubelet-1.23.6 kubeadm-1.23.6 kubectl-1.23.6
+   33  systemctl enable kubelet.service
+   34  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   35  sudo swapoff -a
+   36  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   37  sudo yum install docker-compose-plugin
+   38  sudo systemctl daemon-reload
+   39  sudo systemctl restart docker
+   40  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   41  kubeadm reset
+   42  kubeadm join 192.168.52.128:6443 --token lhtpl1.a1nbf2t9mdic7trx     --discovery-token-ca-cert-hash sha256:80df6f82e8c5f194149ec1d00ded490f8d74802248d2d40a6a2c2e609947db28 
+   43  vim etc/hosts
+   44  vim etc/host
+   45  vim /etc/host
+   46  vim /etc/hosts
+   47  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   48  nslookup 192.168.0.118
+   49  nslookup 192.168.52.129
+   50  vim /etc/hosts
+   51  nslookup 192.168.0.118
+   52  nslookup 192.168.52.129
+   53  vim /etc/hosts
+   54  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   55  hostnamectl set-hostname myname
+   56  hostnamectl set-hostname master
+   57  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   58  journalctl -xefu kubelet
+   59  vim /etc/docker/daemon.json
+   60  systemctl daemon-reload
+   61  systemctl restart docker
+   62  systemctl restart kubelet
+   63  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   64   mkdir -p $HOME/.kube
+   65    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   66    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   67  systemctl disable firewalld
+   68  chkconfig iptables off
+   69  kubectl node list
+   70  kubectl
+   71  kubectl get nodes
+   72  set +o history;
+   73  history
+   74  87
+   75  openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+   76  kubeadm token list
+   77  vim /etc/hosts
+   78  192.168.52.129 localhost master
+   79  192.168.52.130 node1
+   80  vim /etc/hosts
+   81  kubeadm token list
+   82  systemctl disable firewalld
+   83  kubeadm token list
+   84  kubeadm get list
+   85  kubeadm get lists
+   86  kubectl get lists
+   87  kubectl get list
+   88  kubectl get nodes
+   89  kubectl get no
+   90  kubectl get nodes
+   91  kubectl get no
+   92  kubeadm join 192.168.52.130:6443 --token 2yn92c.sf6394rzbsunbg4q         --discovery-token-ca-cert-hash sha256:c7536850a0d04492109504e362020f268eb2b61e864c8e7b632f57ed54a8403f
+   93  kubeadm reset --force
+   94  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+   95   mkdir -p $HOME/.kube
+   96    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   97   mkdir -p $HOME/.kube
+   98    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   99  mkdir -p $HOME/.kube
+  100  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  101  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  102  kubectl get no
+  103  vim /etc/hosts
+  104  systemctl start kubelet
+  105  export LANG="en_US";export LANGUAGE="en_US";export LC_ALL="en_US";top
+  106  set +o history;
+  107  sudo kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
+  108  systemctl get no
+  109  systemctl get nodes
+  110  kubectl get nodes
+  111  systemctl get nodes
+  112  kubectl get nodes
+  113  systemctl start kubelet
+  114  kubectl get nodes
+  115  systemctl start kubectl
+  116  systemctl start kubeadm
+  117  systemctl get nodes
+  118  systemctl daemon-reload
+  119  systemctl restart docker
+  120  systemctl restart kubelet
+  121  kubectl get nodes
+  122  docker ps
+  123  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  124  systemctl start chronyd
+  125  systemctl enable chronyd
+  126  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  127   systemctl start chronyd
+  128   systemctl enable chronyd
+  129  date
+  130  systemctl disable firewalld
+  131  systemctl disable iptables
+  132  vim /etc/selinux/config
+  133  vim /etc/fstab
+  134  vim /etc/sysctl.d/kubernetes.conf
+  135   sysctl -p
+  136  modprobe br_netfilter
+  137  lsmod | grep br_netfilter
+  138  yum install ipset ipvsadm -y
+  139  cat <<EOF> /etc/sysconfig/modules/ipvs.modulesmodprobe -- ip_vs
+  140  modprobe -- ip_vs_rr
+  141  modprobe -- ip_vs_wrr
+  142  modprobe -- ip_vs_sh
+  143  modprobe -- nf_conntrack_ipv4
+  144  EOF
+  145  chmod +x /etc/sysconfig/modules/ipvs.modules
+  146  /bin/bash /etc/sysconfig/modules/ipvs.modules
+  147  lsmod | grep -e ip_vs -e nf_conntrack_ipv4
+  148  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  149   journalctl -xefu kubelet
+  150  swapoff -a
+  151  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  152  mkdir -p $HOME/.kube
+  153   sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  154  kubectl get nodes
+  155  kubectl get pods -n kube-system
+  156  cd home
+  157  cd /home
+  158  mkdir /k8s
+  159  cd /k8s/
+  160  wget https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+  161  cd /home/k8s
+  162  grep image calico.ymal
+  163  grep image calico.yaml
+  164  sed -i 's#docker.io/##g' calico.yaml
+  165  grep image calico.yaml
+  166  kubectl apply -f calico.yaml
+  167  ifconfig
+  168  sed -i 's/"autodetect"/"autodetect"\n            - name: IP_AUTODETECTION_METHOD\n             value: "interface=ens33"/g' calico.yaml
+  169  kubectl apply -f calico.yaml
+  170  export LANG="en_US";export LANGUAGE="en_US";export LC_ALL="en_US";top
+  171  cd /home/k8s
+  172   sed -i 's#docker.io/##g' calico.yaml
+  173  sed -i 's/"autodetect"/"autodetect"\n            - name: IP_AUTODETECTION_METHOD\n             value: "interface=ens33"/g' calico.yaml
+  174  kubectl apply -f calico.yaml
+  175  kubectl get po -n kube-sysytem
+  176  kubectl apply -f calico.yaml
+  177  wget https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+  178   sed -i 's#docker.io/##g' calico.yaml
+  179  sed -i 's/"autodetect"/"autodetect"\n            - name: IP_AUTODETECTION_METHOD\n             value: "interface=ens33"/g' calico.yaml
+  180  kubectl apply -f calico.yaml
+  181  kubectl get po -n kuba-system
+  182  kubectl get po -n kube-system
+  183   sed -i 's#docker.io/##g' calico.yaml
+  184  kubectl apply -f calico.yaml
+  185  kubectl get po -n kube-system
+  186  grep image calico.yaml
+  187  kubectl get po -n kube-system
+  188  grep image calico.yaml
+  189  kubectl get po -n kube-system
+  190  kubectl get nodes
+  191  kubectl get po -n kube-system
+  192  kubectl describe po 
+  193  kubectl describe po calico-node-5t75z -n kube-system
+  194  sed -i 's/"autodetect"/"autodetect"\n            - name: IP_AUTODETECTION_METHOD\n             value: "interface=ens33"/g' calico.yaml
+  195  kubectl apply -f calico.yaml
+  196  kubectl describe po calico-node-5t75z -n kube-system
+  197  kubectl get po -n kube-system
+  198  journalctl -f -u kubelet.service
+  199  mkdir -p /etc/cni/net.d
+  200  wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  201  vim /etc/cni/net.d/10-flannel.conf
+  202  kubectl get po -n kube-system
+  203  wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  204  docker pull quay.io/coreos/flannel:v0.14.0
+  205  vim /etc/cni/net.d/10-flannel.conf
+  206  kubeadm reset
+  207  systemctl stop kubelet
+  208  systemctl stop docker
+  209  rm -rf /var/lib/cni/
+  210  rm -rf /var/lib/kubelet/*
+  211  ifconfig cni0 down
+  212  ifconfig flannel.1 down
+  213  ifconfig docker0 down
+  214  ip link delete cni0
+  215  ip link delete flannel.1
+  216  kubectl get po -n kube-system
+  217  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  218  journalctl -xefu kubelet
+  219  cd /etc/kubernetes/pki/
+  220  mkdir backup
+  221  mv  apiserver.crt apiserver-etcd-client.key apiserver-kubelet-client.crt front-proxy-ca.crt front-proxy-client.crt front-proxy-client.key front-proxy-ca.key apiserver-kubelet-client.key apiserver.key apiserver-etcd-client.crt backup
+  222  kubeadm init phase certs all
+  223  ————————————————
+  224  版权声明：本文为CSDN博主「作 秀」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+  225  原文链接：https://blog.csdn.net/weixin_60552163/article/details/131112179
+  226  mv  apiserver.crt apiserver-etcd-client.key apiserver-kubelet-client.crt front-proxy-ca.crt front-proxy-client.crt front-proxy-client.key front-proxy-ca.key apiserver-kubelet-client.key apiserver.key apiserver-etcd-client.crt backup
+  227  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  228  swapoff -a
+  229  systemctl status kubelet
+  230  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  231  docker
+  232  kubecil
+  233  kubectl
+  234  journalctl -xefu kubelet
+  235   cd /etc/kubernetes/pki/
+  236  mkdir backup
+  237  mv  apiserver.crt apiserver-etcd-client.key apiserver-kubelet-client.crt front-proxy-ca.crt front-proxy-client.crt front-proxy-client.key front-proxy-ca.key apiserver-kubelet-client.key apiserver.key apiserver-etcd-client.crt backup
+  238  y
+  239  kubeadm init phase certs all
+  240  mv  apiserver.crt apiserver-etcd-client.key apiserver-kubelet-client.crt front-proxy-ca.crt front-proxy-client.crt front-proxy-client.key front-proxy-ca.key apiserver-kubelet-client.key apiserver.key apiserver-etcd-client.crt backup
+  241  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  242  kubeadm reset -force
+  243  kubeadm reset 
+  244  kubeadm reset -f
+  245  kubeadm reset -f  --clear
+  246  kubeadm reset -f -clear
+  247  kubeadm reset -f 
+  248  kubeadm reset -f
+  249  remove /etc/cni/net.d
+  250  kubeadm init --apiserver-advertise-address=192.168.52.129 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version=v1.23.6 --service-cidr=10.96.0.0/12 --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+  251  mkdir -p $HOME/.kube
+  252  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  253   sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  254  kubectl get nodes
+  255  kubectl get no
+  256  kubeadm get no
+  257  kubectl get nodes
+  258  mkdir -p $HOME/.kube
+  259  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+  260  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  261  kubectl get no
+  262  set +o history;
+  263  export LANG="en_US";export LANGUAGE="en_US";export LC_ALL="en_US";top
+  264  kubectl get no
+  265  kubectl get pods -n kube-system
+  266  cd /home/k8s
+  267  grep image calico.yaml
+  268  sed -i 's#docker.io/##g' calico.yaml
+  269  grep image calico.yaml
+  270  docker pull calico/cni:v3.25.0
+  271  kubectl apply -f calico.yaml
+  272  kubectl get po -n kube-system
+  273  kubectl describe po calico-node-7btjk
+  274  kubectl describe po calico-node-7btjk -n kube-system
+  275  uname -r
+  276  rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+  277  echo $?
+  278  yum install https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm
+  279  yum --enablerepo=elrepo-kernel install kernel-ml-devel kernel-ml -y
+  280  yum install https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch
+  281  y
+  282  echo $?
+  283  grub2-editenv list
+  284  cat /boot/grub2/grub.cfg | grep -i ^menuentry
+  285  grub2-set-default  'CentOS Linux (6.4.7-1.el7.elrepo.x86_64) 7 (Core)'
+  286   grub2-editenv list
+  287   reboot
+  288   uname -r
+  289  history
+
+
+swapoff -a
+setenforce 0
+systemctl daemon-reload
+systemctl restart kubelet
+
+
+
+systemctl status docker
+systemctl daemon-reload
