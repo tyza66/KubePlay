@@ -1,0 +1,1 @@
+multipass launch --name k3s --cpus 2 --memory 8G --disk 10G
