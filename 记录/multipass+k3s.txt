@@ -11,3 +11,19 @@ sudo passwd root
 sudo vi /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
 
 sudo service ssh restart
+
+curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn sh -
+
+kubectl get nodes
+
+sudo cat /var/lib/rancher/k3s/server/node-token
+K1098885c0e9340fa2edcb4244809665684a09d6533bbc2b1eb442991247f9a7658::server:d7244ca0fafdc10e837b00ec362c5b91
+
+这里k3s节点是master节点 剩下work1\work2是工作节点
+multipass launch --name worker1 --cpus 2 --memory 8G --disk 10G
+multipass launch --name worker2 --cpus 2 --memory 8G --disk 10G
+
+curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn K3S_URL="https://172.30.36.156:6443" K3S_TOKEN="K1098885c0e9340fa2edcb4244809665684a09d6533bbc2b1eb442991247f9a7658::server:d7244ca0fafdc10e837b00ec362c5b91" sh -
+
+
+
