@@ -34,6 +34,15 @@ K102535f1f90bbd112b0b8308c94a0c0a1ab4662c432a3eeaf497999e8389986716::server:0ed2
 从节点也一样需要配置好docker一样的
 curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn K3S_URL="https://172.30.46.50:6443" K3S_TOKEN="K102535f1f90bbd112b0b8308c94a0c0a1ab4662c432a3eeaf497999e8389986716::server:0ed24d734e85fefc54dde1355f68e0e9" INSTALL_K3S_EXEC="--docker" sh -
 
+试一下
+kubectl run nginx --image=nginx --port=80
+kubectl get pods
+kubectl describe pod nginx
+
+发现可以了
+
+
+
 
 
 
