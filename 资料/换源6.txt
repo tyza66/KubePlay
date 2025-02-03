@@ -1,0 +1,91 @@
+/etc/systemd/system/k3s.service
+
+国内资源：
+
+Rancher Releases Mirrors：https://mirror.rancher.cn/ 129
+阿里云镜像仓库：registry.cn-hangzhou.aliyuncs.com 160
+root@demo-1:~# time curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | \
+  INSTALL_K3S_MIRROR=cn \
+  K3S_TOKEN=12345 sh -s - \
+  --system-default-registry=registry.cn-hangzhou.aliyuncs.com
+
+[INFO]  Finding release for channel stable
+[INFO]  Using v1.29.4+k3s1 as release
+[INFO]  Downloading hash rancher-mirror.rancher.cn/k3s/v1.29.4-k3s1/sha256sum-amd64.txt
+[INFO]  Downloading binary rancher-mirror.rancher.cn/k3s/v1.29.4-k3s1/k3s
+[INFO]  Verifying binary download
+[INFO]  Installing k3s to /usr/local/bin/k3s
+[INFO]  Skipping installation of SELinux RPM
+[INFO]  Creating /usr/local/bin/kubectl symlink to k3s
+[INFO]  Creating /usr/local/bin/crictl symlink to k3s
+[INFO]  Creating /usr/local/bin/ctr symlink to k3s
+[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+[INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
+[INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
+[INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
+[INFO]  systemd: Enabling k3s unit
+Created symlink /etc/systemd/system/multi-user.target.wants/k3s.service → /etc/systemd/system/k3s.service.
+[INFO]  systemd: Starting k3s
+
+real	0m18.052s
+user	0m0.850s
+sys	0m0.462s
+root@demo-1:~# kubectl get pods -A
+NAMESPACE     NAME                                      READY   STATUS      RESTARTS   AGE
+kube-system   coredns-58c9946f4-b92sb                   1/1     Running     0          80s
+kube-system   helm-install-traefik-crd-zfpb8            0/1     Completed   0          79s
+kube-system   svclb-traefik-e80607b2-c6dmt              2/2     Running     0          36s
+kube-system   helm-install-traefik-k4hjs                0/1     Completed   1          79s
+kube-system   metrics-server-5bbb74b77-kzv8n            1/1     Running     0          80s
+kube-system   traefik-57c89d7764-795wg                  1/1     Running     0          36s
+kube-system   local-path-provisioner-7f4c755b68-ccdrz   1/1     Running     0          80s
+root@demo-1:~# crictl images
+IMAGE                                                                TAG                    IMAGE ID            SIZE
+registry.cn-hangzhou.aliyuncs.com/rancher/klipper-helm               v0.8.3-build20240228   0929b4140ada6       91.2MB
+registry.cn-hangzhou.aliyuncs.com/rancher/klipper-lb                 v0.4.7                 edc812b8e25d0       4.78MB
+registry.cn-hangzhou.aliyuncs.com/rancher/local-path-provisioner     v0.0.26                c54dcef6214cb       17.2MB
+registry.cn-hangzhou.aliyuncs.com/rancher/mirrored-coredns-coredns   1.10.1                 ead0a4a53df89       16.2MB
+registry.cn-hangzhou.aliyuncs.com/rancher/mirrored-library-traefik   2.10.7                 ee69e8120b64a       43.2MB
+registry.cn-hangzhou.aliyuncs.com/rancher/mirrored-metrics-server    v0.7.0                 b9a5a1927366a       19.3MB
+registry.cn-hangzhou.aliyuncs.com/rancher/mirrored-pause             3.6                    6270bb605e12e       298kB
+K3s agent 节点安装：
+
+root@demo-2:~# curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | \
+  INSTALL_K3S_MIRROR=cn \
+  K3S_URL=https://172.16.0.98:6443 \
+  K3S_TOKEN=12345 \
+  sh -
+
+# K3s agent 节点不需要配置 `system-default-registry`。
+root@demo-2:~# crictl images
+IMAGE                                                      TAG                 IMAGE ID            SIZE
+registry.cn-hangzhou.aliyuncs.com/rancher/klipper-lb       v0.4.7              edc812b8e25d0       4.78MB
+registry.cn-hangzhou.aliyuncs.com/rancher/mirrored-pause   3.6                 6270bb605e12e       298kB
+高可用安装
+第一个 K3s Server 节点：
+
+curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | \
+  INSTALL_K3S_MIRROR=cn \
+  K3S_TOKEN=12345 \
+  sh -s - server \
+  --cluster-init \
+  --token 12345 \
+  --system-default-registry=registry.cn-hangzhou.aliyuncs.com
+将第二台和第三台 K3s Server 加入集群：：
+
+curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | \
+  INSTALL_K3S_MIRROR=cn \
+  K3S_TOKEN=12345 \
+  sh -s - server \
+  --server https://172.16.0.98:6443 \
+  --system-default-registry=registry.cn-hangzhou.aliyuncs.com
+通过配置文件安装 K3s
+K3s Server:
+
+root@demo-1:~# mkdir -p /etc/rancher/k3s/
+root@demo-1:~# cat >/etc/rancher/k3s/config.yaml <<EOL
+token: 12345
+system-default-registry: registry.cn-hangzhou.aliyuncs.com
+EOL
+
+root@demo-1:~# curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn sh -

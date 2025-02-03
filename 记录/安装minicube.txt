@@ -1,0 +1,16 @@
+https://geekhour.net/2023/12/23/kubernetes/
+这个依赖于docker
+
+
+#!/bin/bash
+
+# 安装必要的依赖
+sudo apt-get update
+sudo apt-get install -y curl
+
+# 下载并安装 Minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# 启动 Minikube
+minikube start

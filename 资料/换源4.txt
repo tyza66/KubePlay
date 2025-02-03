@@ -1,0 +1,6 @@
+cat > /etc/rancher/k3s/registries.yaml <<EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://docker.m.daocloud.io"
+EOF

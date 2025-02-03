@@ -1,0 +1,35 @@
+https://blog.csdn.net/xs20691718/article/details/106515605
+
+在 rancher 上改改版本号，然后就卡住了，在 event 中可以看到，卡在了拉镜像这一步。
+
+k3s 默认是基于 containerd 的，我最开始用 k3s 的时候，手动改成了 docker，所以设置设置 docker 加速源，就不会有卡在拉镜像这一步了，后来我重新部署了一次 k3s，就使用的默认的 containerd，这个问题就一直存在了。
+
+最开始我还不太懂的时候，以为只要设置好 docker 加速源就好了，后来虽然发现了不对劲，但是也懒得花时间去研究 containerd 了。
+
+最近兴致不错，近期该学的东西也进展的不错，顺手解决一下这个问题。
+
+解决
+1. 修改配置文件
+通过 crictl info 命令可以查看 containerd 当前的配置信息
+
+可以看到是默认的镜像源。
+
+k3s 会在目录 /var/lib/rancher/k3s/agent/etc/containerd 下创建一个 config.toml 文件作为 containerd 的配置文件，我们要做的就是，在同目录下把这个文件复制出来一个 config.toml.tmpl 文件，然后添加镜像源相关的配置进去。
+
+# 在 config.toml.tmpl 文件中添加
+[plugins.cri.registry.mirrors]
+  [plugins.cri.registry.mirrors."docker.io"]
+    endpoint = ["https://docker.mirrors.ustc.edu.cn"]
+1
+2
+3
+4
+为什么要复制一个 config.toml.tmpl 文件，而不是直接改 config.toml 文件，请参考文档：Containerd 和 Docker
+
+2. 重启 k3s
+执行 systemctl restart k3s 命令重启服务。
+
+等待重启完成后，再看看 containerd 的状态信息：
+
+
+好了，配置成功。

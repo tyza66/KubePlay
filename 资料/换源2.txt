@@ -1,0 +1,27 @@
+怎么修改成国内的镜像源
+要将 K3s 的镜像源修改为国内的镜像源，你可以按照以下步骤进行：
+
+创建或编辑 registries.yaml文件： 首先，确保在控制节点（Master Node）上创建或编辑 /etc/rancher/k3s/registries.yaml 文件。如果该文件不存在，你需要创建它。
+
+配置国内镜像源： 在 registries.yaml 文件中，添加国内镜像源的配置。例如，使用阿里云镜像加速器，可以添加以下内容：
+
+yaml
+mirrors:
+  "docker.io":
+    endpoint:
+      - "https://f1361db2.m.daocloud.io"
+重启 K3s 服务： 保存并关闭配置文件后，重启 K3s 服务以应用配置更改：
+
+bash
+sudo systemctl restart k3s
+验证配置： 通过拉取一个镜像来验证配置是否生效。你可以创建一个简单的部署来测试镜像拉取速度。
+
+如果在重启服务时遇到错误，可以通过查看详细日志来找出具体的错误原因：
+
+bash
+sudo journalctl -xeu k3s.service
+
+
+
+"https://docker.mirrors.ustc.edu.cn"
+egistry.cn-hangzhou.aliyuncs.com/google_containers

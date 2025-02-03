@@ -1,0 +1,67 @@
+https://blog.csdn.net/weixin_42670590/article/details/141427039
+1.修改 K3s 配置文件
+1)对于较新的 K3s 版本，你可以通过编辑 K3s 的配置文件来指定镜像仓库。编辑 /etc/rancher/k3s/config.yaml 文件（如果不存在则需要创建），添加或修改以下配置：
+
+# /etc/rancher/k3s/config.yaml
+disable:
+  - servicelb
+  - traefik
+# Add your registry configuration
+k3s:
+  - --registry-mirror=https://192.168.110.21:5000
+  - --disable=metrics-server
+2)重启 K3s 服务：
+
+sudo systemctl restart k3s
+2. 配置 Docker 镜像拉取
+确保你的 K3s 节点能够访问私有镜像仓库，特别是当仓库使用 HTTP 而不是 HTTPS 时。可以通过以下方法进行配置：
+
+在 Docker Daemon 配置中添加私有仓库
+1、编辑 Docker 的配置文件 /etc/docker/daemon.json：
+
+sudo vim /etc/docker/daemon.json
+2、添加你的私有仓库地址：
+
+{
+  "insecure-registries": ["192.168.110.21:5000"]
+}
+3、重新启动 Docker 服务：
+
+sudo systemctl restart docker
+3. 配置 Kubernetes Secret
+如果你的私有镜像仓库需要身份验证，你还需要创建一个 Kubernetes Secret 用于认证。
+
+kubectl create secret docker-registry my-registry-secret \
+  --docker-server=192.168.110.21:5000 \
+  --docker-username=<username> \
+  --docker-password=<password> \
+  --docker-email=<email>
+然后，在你的 Deployment 或 Pod 配置中引用该 Secret：
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-container
+        image: 192.168.110.21:5000/my-image:tag
+      imagePullSecrets:
+      - name: my-registry-secret
+
+4. 使用 Kuboard 配置
+在 Kuboard 中：
+
+打开 Kuboard 的 Web UI。
+选择要更新的 Deployment 或 Pod。
+在 YAML 配置中确保 image 字段指向你的私有镜像仓库地址。
+如果需要，更新 imagePullSecrets 以匹配你的 Secret。

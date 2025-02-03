@@ -1,0 +1,21 @@
+kubectl get nodes		查看所有节点
+kubectl get svc		查看所有服务
+kubectl get pod		查看集群中所有pod的状态
+
+创建一个pod
+kubectl run nginx --image=nginx   #image是指定镜像 第一个nginx是名字 第二个是镜像名称
+
+kubectl create service或者deployment等资源对象
+
+
+containerd情况下
+拉不到就直接指定代理地址
+kubectl run nginx --image=m.daocloud.io/library/nginx --port=80
+
+下载缺失镜像
+sudo ctr images pull registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6
+
+将镜像重新打标签
+sudo ctr images tag registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6 rancher/mirrored-pause:3.6
+
+

@@ -1,0 +1,66 @@
+答谢楼主热心回复
+首先 agent节点我也验证过了，结果和预期一样，agent节点从主节点获取该配置，正常从镜像源下载镜像
+
+ExecStart=/usr/local/bin/k3s \
+    server \
+        '--system-default-registry=registry.cn-hangzhou.aliyuncs.com' \
+另外 为感谢楼主帮助，决定为社区贡献点我自己躺过的弯路，供大家闭坑：
+
+参数“–system-default-registry=registry.cn-hangzhou.aliyuncs.com 6”
+可以解决k3s自身使用的镜像更换为镜像源的效果，但是k3s集群内部署的各种应用还是会从docker.io下载镜像
+为了解决应用从docker.io下载镜像的问题，有两种解决方式，一种是部署完k3s后新增配置文件registries.yaml
+然后重启，显然这种方式有点繁琐，像我这样的懒人肯定不喜欢
+
+cat > /etc/rancher/k3s/registries.yaml <<EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://registry.cn-hangzhou.aliyuncs.com/"
+      - "https://mirror.ccs.tencentyun.com"
+  quay.io:
+    endpoint:
+      - "https://quay.tencentcloudcr.com/"
+  registry.k8s.io:
+    endpoint:
+      - "https://registry.aliyuncs.com/v2/google_containers"
+  gcr.io:
+    endpoint:
+      - "https://gcr.m.daocloud.io/"
+  k8s.gcr.io:
+    endpoint:
+      - "https://registry.aliyuncs.com/google_containers"
+  ghcr.io:
+    endpoint:
+      - "https://ghcr.m.daocloud.io/"
+EOF
+systemctl restart k3s
+另一种是安装k3s的时候直接添加环境变量 INSTALL_K3S_REGISTRIES=“https://registry.cn-hangzhou.aliyuncs.com 12”
+
+curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | \
+  INSTALL_K3S_MIRROR=cn INSTALL_K3S_REGISTRIES="https://registry.cn-hangzhou.aliyuncs.com,https://mirror.ccs.tencentyun.com" sh -s - \
+  --system-default-registry=registry.cn-hangzhou.aliyuncs.com
+验证发现 变量INSTALL_K3S_REGISTRIES 不生效，原因是k3s安装脚本k3s-install.sh中函数setup_registry() 只有声明，没有调用
+
+# --- Setup a custom Registry or Mirror
+setup_registry() {
+    REGISTRIES_FILE="/etc/rancher/k3s/registries.yaml"
+    if [ "${INSTALL_K3S_REGISTRIES}" -a ! -f "$REGISTRIES_FILE" ]; then
+        INSTALL_K3S_REGISTRIES=`echo ${INSTALL_K3S_REGISTRIES} | awk '{gsub(/,/," "); print $0}'`
+        $SUDO mkdir -p `dirname $REGISTRIES_FILE`
+        $SUDO cat >> $REGISTRIES_FILE <<EOF
+mirrors:
+  "docker.io":
+    endpoint:
+EOF
+        for registry in ${INSTALL_K3S_REGISTRIES}; do
+            echo "      - $registry" >> "$REGISTRIES_FILE"
+        done
+    fi
+}
+在适当位置修改安装脚本k3s-install.sh 即可完成变量INSTALL_K3S_REGISTRIES生效的目的，
+比如在函数setup_env() 的最后调用setup_registry()
+
+以上小结：参数“–system-default-registry”可以解决k3s自身用到的镜像换源的效果，
+但是k3s自身内的应用无法通过该参数换源，但是可用用变量 INSTALL_K3S_REGISTRIES 在安装K3s的时候换源，
+需要注意的是使用变量 INSTALL_K3S_REGISTRIES 时需要修改k3s安装脚本，添加函数 setup_registry 调用。
+新增配置文件registries.yaml也可以完成以上效果，但是需要重启服务。
