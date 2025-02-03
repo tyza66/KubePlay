@@ -1,0 +1,23 @@
+在 macOS（以及其他 Unix 系统）中，alias 命令用于创建命令的快捷方式或别名。通过定义 alias，你可以简化长命令的输入，将其缩短为更容易记住和输入的单词或短语。
+
+举个例子，如果你经常使用 ls -la 命令来列出文件和目录的详细信息，你可以创建一个别名 ll，这样每次输入 ll 就可以执行 ls -la：
+
+sh
+alias ll='ls -la'
+要永久保存这些别名，你可以将它们添加到你的 shell 配置文件中，例如 .bash_profile 或 .zshrc 文件。编辑配置文件并添加别名行：
+
+sh
+nano ~/.bash_profile
+# 或者
+nano ~/.zshrc
+在文件中添加别名行：
+
+sh
+alias ll='ls -la'
+保存并关闭文件，然后运行以下命令使更改生效：
+
+sh
+source ~/.bash_profile
+# 或者
+source ~/.zshrc
+这样，你定义的别名将在每次启动新终端会话时自动加载。

@@ -1,1 +1,13 @@
 multipass launch --name k3s --cpus 2 --memory 8G --disk 10G
+
+nultipass list
+multipass shell k3s
+sudo passwd ubuntu
+sudo passwd root
+. 1
+
+修改PasswoedAuthentication为yes
+修改PermitRootLogin
+sudo vi /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+
+sudo service ssh restart
