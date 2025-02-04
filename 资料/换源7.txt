@@ -1,0 +1,62 @@
+. 确认容器运行时配置
+确保 containerd 配置文件中添加了正确的镜像加速器，并且配置文件路径正确：
+
+bash
+sudo cat /etc/containerd/config.toml
+确保文件包含以下内容：
+
+toml
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+    endpoint = ["https://docker.m.daocloud.io"]
+2. 确认配置文件已生效
+重启 containerd 和 k3s 服务，以确保新的配置生效：
+
+bash
+sudo systemctl restart containerd
+sudo systemctl restart k3s
+3. 使用命令测试镜像拉取
+使用 ctr 命令手动拉取镜像，查看是否仍然超时：
+
+bash
+sudo ctr images pull docker.io/library/nginx:latest
+4. 检查网络连接
+确保您的服务器可以访问所有配置的镜像加速器地址。您可以尝试从服务器上直接访问这些地址，例如：
+
+bash
+curl -I https://docker.m.daocloud.io
+如果无法访问，可能需要调整网络配置或防火墙设置。
+
+5. 使用其他镜像源
+如果当前的镜像加速器不稳定，尝试使用其他镜像源。例如，可以尝试使用阿里云的加速器：
+
+bash
+sudo vim /etc/containerd/config.toml
+添加或修改以下内容：
+
+toml
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+    endpoint = ["https://registry.aliyuncs.com"]
+6. 更新 K3s 配置
+修改 /etc/rancher/k3s/registries.yaml 文件：
+
+bash
+sudo vim /etc/rancher/k3s/registries.yaml
+添加或修改以下内容：
+
+yaml
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://registry.aliyuncs.com"
+重启 K3s 服务：
+
+bash
+sudo systemctl restart k3s
+7. 查看日志
+查看 containerd 和 k3s 的日志，获取更多错误信息：
+
+bash
+journalctl -u containerd
+journalctl -u k3s

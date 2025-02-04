@@ -1,0 +1,67 @@
+ 安装Helm
+使用包管理器安装：
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+# macOS
+brew install helm
+
+# Windows
+choco install kubernetes-helm
+# 或者
+scoop install helm
+
+# Linux（Debian/Ubuntu）
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+
+# Linux（CentOS/Fedora）
+sudo dnf install helm
+
+# Linux（Snap）
+sudo snap install helm --classic
+
+# Linux（FreeBSD）
+pkg install helm
+
+
+
+使用脚本安装
+
+1
+2
+3
+$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+或者
+
+1
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash

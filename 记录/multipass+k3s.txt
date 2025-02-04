@@ -26,5 +26,87 @@ multipass launch --name worker2 --cpus 2 --memory 8G --disk 10G
 
 curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn K3S_URL="https://172.30.36.156:6443" K3S_TOKEN="K1098885c0e9340fa2edcb4244809665684a09d6533bbc2b1eb442991247f9a7658::server:d7244ca0fafdc10e837b00ec362c5b91" sh -
 
+curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn K3S_URL="https://172.30.34.45:6443" K3S_TOKEN="K10d6dcc65c2b7335d307546a57952de2de657dcc5f7ad167139501b46b39db485e::server:ad341b1cf1669f2c9950aebc6d8fde22" sh -
+
+
+vim /etc/containerd/config.toml
+[plugins."io.containerd.grpc.v1.cri".registry]
+          config_path = "/etc/containerd/certs.d"
+
+mkdir -p /etc/containerd/certs.d
+mkdir /etc/containerd/certs.d/docker.io
+vim /etc/containerd/certs.d/docker.io/hosts.toml
+
+sudo mkdir -p /etc/containerd/certs.d/docker.io
+sudo echo "" > /etc/containerd/certs.d/docker.io/hosts.toml
+cat > /etc/containerd/certs.d/docker.io/hosts.toml << EOF
+server = "https://docker.io"
+[host."https://docker.m.daocloud.io"]
+    capabilities = ["pull", "resolve"]
+[host."https://dockerproxy.com"]
+    capabilities = ["pull", "resolve"]
+[host."https://docker.mirrors.ustc.edu.cn"]
+    capabilities = ["pull", "resolve"]
+[host."https://docker.nju.edu.cn"]
+    capabilities = ["pull", "resolve"]
+EOF
+
+sudo mkdir -p /etc/rancher/k3s/registries.yaml
+sudo vim /etc/rancher/k3s/registries.yaml
+sudo mkdir -p /etc/rancher/k3s/
+sudo cat > /etc/rancher/k3s/registries.yaml <<EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://docker.m.daocloud.io"
+  quay.io:
+    endpoint:
+      - "https://quay.tencentcloudcr.com"
+  registry.k8s.io:
+    endpoint:
+      - "https://registry.aliyuncs.com/v2/google_containers"
+  gcr.io:
+    endpoint:
+      - "https://gcr.m.daocloud.io"
+  k8s.gcr.io:
+    endpoint:
+      - "https://registry.aliyuncs.com/google_containers"
+  ghcr.io:
+    endpoint:
+      - "https://ghcr.m.daocloud.io"
+EOF
+
+sudo systemctl restart k3s
+
+sudo systemctl list-units --type=service --state=running
+
+cat /etc/resolv.conf
+sudo vim /etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+
+
+sudo mkdir -p /etc/containerd/certs.d/docker.io
+sudo cat > /etc/containerd/certs.d/docker.io/hosts.toml <<EOF
+[[host]]
+  host = "https://docker.m.daocloud.io"
+  capabilities = ["pull", "resolve"]
+
+[[host]]
+  host = "https://dockerproxy.com"
+  capabilities = ["pull", "resolve"]
+
+[[host]]
+  host = "https://mirror.gcr.io"
+  capabilities = ["pull", "resolve"]
+EOF
+
+kubectl run nginx --image=nginx:latest --port=80
+
+kubectl expose pod nginx --type=NodePort --port=80
+
+kubectl describe pod nginx
+
+
 
 
