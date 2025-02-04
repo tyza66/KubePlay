@@ -107,6 +107,71 @@ kubectl expose pod nginx --type=NodePort --port=80
 
 kubectl describe pod nginx
 
+sudo sed -i 's/registry.k8s.io\/pause:3.6/registry.aliyuncs.com\/google_containers\/pause:3.9/g' /etc/containerd/config.toml
+sudo systemctl restart containerd
+
+
+
+
+sudo mkdir -p /etc/rancher/k3s/
+sudo cat > /etc/rancher/k3s/registries.yaml <<EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://docker.m.daocloud.io"
+  quay.io:
+    endpoint:
+      - "https://quay.tencentcloudcr.com"
+  registry.k8s.io:
+    endpoint:
+      - "https://registry.aliyuncs.com/v2/google_containers"
+  gcr.io:
+    endpoint:
+      - "https://gcr.m.daocloud.io"
+  k8s.gcr.io:
+    endpoint:
+      - "https://registry.aliyuncs.com/google_containers"
+  ghcr.io:
+    endpoint:
+      - "https://ghcr.m.daocloud.io"
+EOF
+
+上面三个配置好
+
+systemctl restart k3s-agent
+systemctl restart k3s-agent
+systemctl restart k3s-agent
+
+
+sudo rm -rf /var/lib/rancher/k3s/agent
+
+
+172.30.40.149
+sudo vim /etc/systemd/system/k3s-agent.service
+
+[Service]
+Environment="K3S_URL=https://<master-node-ip>:6443"
+Environment="K3S_TOKEN=<your-cluster-token>"
+
+sudo cat /etc/containerd/config.toml
+sudo rm -rf /var/lib/containerd/daemon/images
+
+sudo mkdir -p /etc/containerd
+sudo cat > /etc/containerd/config.toml <<EOF
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+    endpoint = ["https://registry.aliyuncs.com"]
+EOF
+
+sudo mkdir -p /etc/rancher/k3s/
+sudo cat > /etc/rancher/k3s/registries.yaml <<EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://registry.aliyuncs.com"
+EOF
+
+sudo rm -rf /var/lib/containerd/daemon/images
 
 
 
