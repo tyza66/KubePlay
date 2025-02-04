@@ -1,0 +1,54 @@
+无论使用 containerd 还是 Docker 作为容器运行时，如果希望在所有节点上配置镜像加速器或者其他全局设置，都需要在 每个 Worker 节点 上进行相应的配置。这样可以确保整个集群中的每个节点都能受益于这些配置，提高镜像拉取的速度和稳定性。
+
+为每个节点配置镜像加速器
+无论是使用 containerd 还是 Docker，以下是如何在每个节点上配置镜像加速器的步骤：
+
+对于 Docker：
+创建或编辑 Docker 配置文件
+
+在每个节点上创建或编辑 /etc/docker/daemon.json 文件，添加镜像加速器配置。例如：
+
+json
+{
+  "registry-mirrors": [
+    "https://do.nark.eu.org",
+    "https://dc.j8.work",
+    "https://docker.m.daocloud.io",
+    "https://dockerproxy.com",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://docker.nju.edu.cn"
+  ]
+}
+重新启动 Docker 服务
+
+bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+对于 containerd：
+创建或编辑 containerd 配置文件
+
+在每个节点上创建或编辑 /etc/containerd/config.toml 文件，添加镜像加速器配置。例如：
+
+toml
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+    endpoint = ["https://do.nark.eu.org", "https://dc.j8.work", "https://docker.m.daocloud.io", "https://dockerproxy.com", "https://docker.mirrors.ustc.edu.cn", "https://docker.nju.edu.cn"]
+重新启动 containerd 服务
+
+bash
+sudo systemctl restart containerd
+确保每个节点上的配置生效
+通过确保每个节点上的配置文件都已更新，并重新启动相关服务，您可以提高整个集群的镜像拉取速度和稳定性。这对于管理和运行 Kubernetes 集群中的容器非常重要。
+
+验证配置是否生效
+查看配置文件内容
+
+bash
+cat /etc/docker/daemon.json
+cat /etc/containerd/config.toml
+测试镜像拉取速度
+
+尝试拉取一个镜像，验证镜像加速器是否生效：
+
+bash
+docker pull nginx

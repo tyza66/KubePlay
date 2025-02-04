@@ -41,6 +41,49 @@ kubectl describe pod nginx
 
 发现可以了
 
+sudo kubectl create deployment nginx-deployment --image=nginx
+kubectl get deployment
+创建deployment的时候kube会根据我们刚刚的配置创建一个pod
+
+
+kubectl get replicaset 这个是在deployment和pod之间的中间层 用来管理pod的
+
+deployment管理replicaset 
+replicaset 管理 pod
+
+
+可以使用
+kubectl create -f nginx-deployment.yaml
+kubectl apply -f nginx-deployment.yaml
+kubectl get pod -o wide 查看pod的地址
+
+使用命令行创建服务
+kubectl create service mginx-service
+kubectl expose deployment nginx-deployment
+
+kubectl delete service nginx-deployment
+
+kubectl get all
+
+还可以用配置文件添加服务
+kubectl  apply -f nginx-service.yaml
+
+之后需要使用nodePort服务将服务公开到节点上
+修改配置文件后kubectl  apply -f nginx-service.yaml
+
+
+使用可视化管理工具
+# 在master节点上安装portainer，并将其暴露在NodePort 30777上
+kubectl apply -n portainer -f https://downloads.portainer.io/ce2-19/portainer.yaml
+-n是用来指定命名控件的  可以隔离分组
+kebectl get ns 可以查看命名空间  如果不指定命名空间都是存在default 
+
+默认查看的时候没指定也是看的default
+如果指定了 查看的是也要 kubectl get all -n portainer
+
+http://172.30.46.50:30777/
+
+
 
 
 
